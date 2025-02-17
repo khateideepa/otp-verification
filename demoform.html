@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+</head>
+<body>
+    <h2>Enter Mobile Number for OTP Verification</h2>
+    <input type="text" id="phoneNumber" placeholder="Enter Mobile Number" />
+    <button onclick="sendOTP()">Send OTP</button>
+    <br><br>
+    <input type="text" id="otpCode" placeholder="Enter OTP" />
+    <button onclick="verifyOTP()">Verify OTP</button>
+    <div id="recaptcha-container"></div>
+
+    <script>
+        // 🔹 Firebase Configuration (Replace with your Firebase Config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxca61aMuPNaBFCX2boE8EFW0qEITV_Kc",
+            authDomain: "verificationotp-82ba1.firebaseapp.com",
+            projectId: "verificationotp-82ba1",
+            storageBucket: "verificationotp-82ba1.firebasestorage.app",
+            messagingSenderId: "797569113566",
+            appId: "1:797569113566:web:47d3a7f873a322d6e4914f"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        function sendOTP() {
+            let phoneNumber = "+91" + document.getElementById("phoneNumber").value;
+            let recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+            firebase.auth().signInWithPhoneNumber(phoneNumber, recaptcha)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    alert("OTP Sent Successfully!");
+                }).catch((error) => {
+                    alert(error.message);
+                });
+        }
+
+        function verifyOTP() {
+            let otpCode = document.getElementById("otpCode").value;
+            confirmationResult.confirm(otpCode)
+                .then((result) => {
+                    alert("OTP Verified Successfully!");
+                    // ✅ Redirect Google Form after OTP Verification
+                    window.location.href = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform";
+                }).catch((error) => {
+                    alert("Invalid OTP!");
+                });
+        }
+    </script>
+</body>
+</html>
